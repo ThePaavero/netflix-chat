@@ -14,31 +14,38 @@ const Extension = function() {
   const getMediaTitleString = () => {
     const element = document.querySelector('.video-title')
     if (element) {
-      return element.innerText
+      return element.innerText.trim()
     }
     return null
   }
 
   const sendChatMessage = (message) => {
-    const objectToSend = {
+    if (!socketConnection) {
+      return console.warn('Could not send message, no connection available.')
+    }
+    socketConnection.send(JSON.stringify({
       type: 'message',
       message
-    }
-    socketConnection.send(JSON.stringify(objectToSend))
+    }))
+  }
+
+  const receiveMessageFromServer = (message) => {
+    console.log('SERVER SAYS:')
+    console.log(message)
   }
 
   const connectToChat = (mediaId, mediaTitleString) => {
     console.log(mediaId, mediaTitleString)
     console.log('Connecting to chat...')
     socketConnection = new WebSocket(serverBaseUrl + 'connect?mediaTitleString=' + encodeURIComponent(mediaTitleString) + '&username=' + encodeURIComponent(username))
-    socketConnection.onopen = (e) => {
+    socketConnection.onopen = () => {
       console.log('Connected to chat server.')
-      sendChatMessage('Hello, I\'m "' + username + '"!')
       socketConnection.onmessage = (e) => {
-        const response = e.data
-        console.log('Socket sent message:')
-        console.log(JSON.stringify(response))
+        receiveMessageFromServer(e.data)
       }
+      setTimeout(() => {
+        sendChatMessage('Hello, I\'m "' + username + '" and I\'m watching "' + mediaTitleString + '"!')
+      }, 5000)
     }
   }
 
