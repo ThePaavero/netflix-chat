@@ -25,12 +25,11 @@ ws.on('connection', (client, req) => {
 
 const removeClientObjectFromPool = (clientObject) => {
   console.log('Removing:')
-  console.log(clientObject)
+  console.log(clientObject.username)
   const targetClient = clientsPool.filter(o => o.username === clientObject.username)[0]
   const index = clientsPool.indexOf(targetClient)
-  console.log('index: ' + index)
-  // clientsPool.splice(index, 1)
-  // console.log('Removed "' + targetClient.username + '" from pool.')
+  clientsPool.splice(index, 1)
+  console.log('Removed "' + clientObject.username + '" from pool.')
 }
 
 const reactToUserMessage = (actingClient, data) => {
