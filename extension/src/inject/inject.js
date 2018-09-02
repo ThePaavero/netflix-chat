@@ -1,6 +1,7 @@
 const Extension = function() {
 
   const serverBaseUrl = 'ws://localhost:3002/'
+  const username = 'Pekka'
 
   let mediaId = null
   let mediaTitleString = null
@@ -18,29 +19,39 @@ const Extension = function() {
     return null
   }
 
+  const send = (objectToSend) => {
+    console.log('Sending to server:')
+    console.log(objectToSend)
+    socketConnection.send({
+      type: 'message',
+      name: username,
+      mediaTitleString,
+      message: objectToSend
+    })
+  }
+
   const connectToChat = (mediaId, mediaTitleString) => {
     console.log(mediaId, mediaTitleString)
     console.log('Connecting to chat...')
     socketConnection = new WebSocket(serverBaseUrl + 'connect')
     socketConnection.onopen = (e) => {
-      socketConnection.send({
-        name: 'Some user',
-        mediaId,
-        mediaTitleString
-      })
-    }
-    socketConnection.onmessage = (e) => {
-      const response = e.data
-      console.log('Socket sent message:')
-      console.log(response)
+      console.log('Connected to chat server.')
+      socketConnection.onmessage = (e) => {
+        const response = e.data
+        console.log('Socket sent message:')
+        console.log(response)
+      }
+      setTimeout(() => {
+        send({
+          text: 'Hey hey!'
+        })
+      }, 1000)
     }
   }
 
   const tick = () => {
     mediaId = getMediaId()
     mediaTitleString = getMediaTitleString()
-    console.log(mediaId)
-    console.log(mediaTitleString)
     if (!mediaId || !mediaTitleString) {
       setTimeout(tick, 100)
       return
