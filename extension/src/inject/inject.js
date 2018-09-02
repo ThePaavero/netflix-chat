@@ -1,9 +1,10 @@
 const Extension = function() {
 
-  const serverBaseUrl = 'localhost:3002/'
+  const serverBaseUrl = 'ws://localhost:3002/'
 
   let mediaId = null
   let mediaTitleString = null
+  let socketConnection = null
 
   const getMediaId = () => {
     return window.location.href.split('/')[4].split('?')[0]
@@ -20,6 +21,19 @@ const Extension = function() {
   const connectToChat = (mediaId, mediaTitleString) => {
     console.log(mediaId, mediaTitleString)
     console.log('Connecting to chat...')
+    socketConnection = new WebSocket(serverBaseUrl + 'connect')
+    socketConnection.onopen = (e) => {
+      socketConnection.send({
+        name: 'Some user',
+        mediaId,
+        mediaTitleString
+      })
+    }
+    socketConnection.onmessage = (e) => {
+      const response = e.data
+      console.log('Socket sent message:')
+      console.log(response)
+    }
   }
 
   const tick = () => {
@@ -29,10 +43,9 @@ const Extension = function() {
     console.log(mediaTitleString)
     if (!mediaId || !mediaTitleString) {
       setTimeout(tick, 100)
-      return false
+      return
     }
     connectToChat(mediaId, mediaTitleString)
-    return true
   }
 
   const init = () => {
