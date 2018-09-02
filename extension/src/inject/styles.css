@@ -11,6 +11,7 @@
     left: 0;
     z-index: 9999999;
     color: #fff;
+    overflow: auto;
 }
 
 #netflix-chat-box:hover {
