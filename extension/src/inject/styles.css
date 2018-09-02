@@ -1,26 +1,27 @@
-.NF-low-prio {
-    opacity: 0.3;
-}
-
-.title-card-container .NF-tool-list {
-    display: none;
-    list-style-type: none;
-}
-
-.title-card-container .NF-tool-list li {
+#netflix-chat-box {
+    opacity: 0.7;
     display: block;
-}
-
-.title-card-container .NF-tool-list li a {
-    display: block;
-    background: #fff;
-    color: red;
-}
-
-.title-card-container:hover .NF-tool-list {
-    display: block;
-    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    font-size: 11px;
+    position: fixed;
     top: 0;
-    right: 0;
-    z-index: 100;
+    left: 0;
+    z-index: 9999999;
+    color: #fff;
+}
+
+#netflix-chat-box:hover {
+    opacity: 1;
+}
+
+#netflix-chat-box .row {
+    display: block;
+    margin: 5px 0;
+}
+
+#netflix-chat-box .row.system-row {
+    color: darkgreen;
 }

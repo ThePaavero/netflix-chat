@@ -6,6 +6,20 @@ const Extension = function() {
   let mediaId = null
   let mediaTitleString = null
   let socketConnection = null
+  const outputRows = []
+
+  const createChatBox = () => {
+    const chatElement = document.createElement('div')
+    chatElement.id = 'netflix-chat-box'
+    chatElement.innerHTML = `
+      <p>Initiating chat, just a second...</p>
+    `
+    document.body.append(chatElement)
+  }
+
+  const updateChatBox = () => {
+    document.querySelector('#netflix-chat-box').innerHTML = outputRows.join('<br/>')
+  }
 
   const getMediaId = () => {
     return window.location.href.split('/')[4].split('?')[0]
@@ -33,6 +47,13 @@ const Extension = function() {
     message = JSON.parse(message)
     console.log('SERVER SAYS:')
     console.log(message)
+    outputRows.push(`
+      <div class="row">
+        <span class="username">${message.username}</span>:
+        <span class="message">${message.message}</span>
+      </div>
+    `)
+    updateChatBox()
   }
 
   const connectToChat = (mediaId, mediaTitleString) => {
@@ -44,9 +65,7 @@ const Extension = function() {
       socketConnection.onmessage = (e) => {
         receiveMessageFromServer(e.data)
       }
-      setTimeout(() => {
-        sendChatMessage('Hello, I\'m "' + username + '" and I\'m watching "' + mediaTitleString + '"!')
-      }, 1000)
+      sendChatMessage(`Hello!`)
     }
   }
 
@@ -58,6 +77,7 @@ const Extension = function() {
       return
     }
     connectToChat(mediaId, mediaTitleString)
+    createChatBox()
   }
 
   const init = () => {
