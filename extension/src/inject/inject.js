@@ -30,6 +30,7 @@ const Extension = function() {
   }
 
   const receiveMessageFromServer = (message) => {
+    message = JSON.parse(message)
     console.log('SERVER SAYS:')
     console.log(message)
   }
@@ -45,7 +46,7 @@ const Extension = function() {
       }
       setTimeout(() => {
         sendChatMessage('Hello, I\'m "' + username + '" and I\'m watching "' + mediaTitleString + '"!')
-      }, 5000)
+      }, 1000)
     }
   }
 
