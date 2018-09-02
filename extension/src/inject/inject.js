@@ -1,5 +1,7 @@
 const Extension = function() {
 
+  const serverBaseUrl = 'localhost:3002/'
+
   let mediaId = null
   let mediaTitleString = null
 
@@ -8,7 +10,16 @@ const Extension = function() {
   }
 
   const getMediaTitleString = () => {
-    return document.querySelector('.video-title').innerText
+    const element = document.querySelector('.video-title')
+    if (element) {
+      return element.innerText
+    }
+    return null
+  }
+
+  const connectToChat = (mediaId, mediaTitleString) => {
+    console.log(mediaId, mediaTitleString)
+    console.log('Connecting to chat...')
   }
 
   const tick = () => {
@@ -16,11 +27,17 @@ const Extension = function() {
     mediaTitleString = getMediaTitleString()
     console.log(mediaId)
     console.log(mediaTitleString)
+    if (!mediaId || !mediaTitleString) {
+      setTimeout(tick, 100)
+      return false
+    }
+    connectToChat(mediaId, mediaTitleString)
+    return true
   }
 
   const init = () => {
     console.log('Netflix Chat is enabled.')
-    setTimeout(tick, 5000)
+    tick()
   }
 
   return {
