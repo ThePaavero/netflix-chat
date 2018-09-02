@@ -1,0 +1,26 @@
+.NF-low-prio {
+    opacity: 0.3;
+}
+
+.title-card-container .NF-tool-list {
+    display: none;
+    list-style-type: none;
+}
+
+.title-card-container .NF-tool-list li {
+    display: block;
+}
+
+.title-card-container .NF-tool-list li a {
+    display: block;
+    background: #fff;
+    color: red;
+}
+
+.title-card-container:hover .NF-tool-list {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+}
