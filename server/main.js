@@ -1,15 +1,26 @@
 const WebSocket = require('ws')
-const wss = new WebSocket.Server({port: 3002})
+const ws = new WebSocket.Server({port: 3002})
 
 const connections = []
 
-wss.on('connection', (client) => {
+ws.on('connection', (client) => {
   console.log('New client connected.')
-  client.on('message', (message) => {
-    console.log('received:', JSON.stringify(message))
-    connections.push(client, message.mediaTitleString)
-    client.send('Welcome!')
+  connections.push(client)
+  client.on('message', data => {
+    console.log(data)
+    connections.push({
+      client,
+      username: data.username,
+      mediaTitleString: data.mediaTitleString
+    })
+    client.send('Welcome! You are watching "' + data.mediaTitleString + '" and are now connected to others wathing the same media.')
   })
+})
 
-  client.send('CONNECTED')
+ws.on('message', data => {
+  console.log('Incoming:')
+  console.log(data)
+  connections.forEach(client => {
+    console.log(client)
+  })
 })

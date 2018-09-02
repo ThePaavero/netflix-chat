@@ -19,33 +19,26 @@ const Extension = function() {
     return null
   }
 
-  const send = (objectToSend) => {
-    console.log('Sending to server:')
-    console.log(objectToSend)
-    socketConnection.send({
+  const sendChatMessage = (message) => {
+    const objectToSend = {
       type: 'message',
-      name: username,
-      mediaTitleString,
-      message: objectToSend
-    })
+      message
+    }
+    socketConnection.send(JSON.stringify(objectToSend))
   }
 
   const connectToChat = (mediaId, mediaTitleString) => {
     console.log(mediaId, mediaTitleString)
     console.log('Connecting to chat...')
-    socketConnection = new WebSocket(serverBaseUrl + 'connect')
+    socketConnection = new WebSocket(serverBaseUrl + 'connect?mediaTitleString=' + encodeURIComponent(mediaTitleString) + '&username=' + encodeURIComponent(username))
     socketConnection.onopen = (e) => {
       console.log('Connected to chat server.')
+      sendChatMessage('Hello, I\'m "' + username + '"!')
       socketConnection.onmessage = (e) => {
         const response = e.data
         console.log('Socket sent message:')
-        console.log(response)
+        console.log(JSON.stringify(response))
       }
-      setTimeout(() => {
-        send({
-          text: 'Hey hey!'
-        })
-      }, 1000)
     }
   }
 
