@@ -1,15 +1,26 @@
-const NetflixFixer = function() {
+const Extension = function() {
 
-  let cards = []
+  let mediaId = null
+  let mediaTitleString = null
+
+  const getMediaId = () => {
+    return window.location.href.split('/')[4].split('?')[0]
+  }
+
+  const getMediaTitleString = () => {
+    return document.querySelector('.video-title').innerText
+  }
 
   const tick = () => {
-    console.log('Tick.', cards)
-    cards = Array.from(document.querySelectorAll('.rowContainer_title_card'))
+    mediaId = getMediaId()
+    mediaTitleString = getMediaTitleString()
+    console.log(mediaId)
+    console.log(mediaTitleString)
   }
 
   const init = () => {
-    // tick()
-    // setInterval(tick, 5000)
+    console.log('Netflix Chat is enabled.')
+    setTimeout(tick, 5000)
   }
 
   return {
@@ -21,7 +32,7 @@ chrome.extension.sendMessage({}, () => {
   const readyStateCheckInterval = setInterval(() => {
     if (document.readyState === 'complete') {
       clearInterval(readyStateCheckInterval)
-      const netflixFixer = new NetflixFixer()
+      const netflixFixer = new Extension()
       netflixFixer.init()
     }
   }, 10)
