@@ -16,7 +16,7 @@ const Extension = function() {
         <p>Initiating chat, just a second...</p>
       </div>
       <form id="netflix-chat-box-prompt-form">
-        <input type="text" id="netflix-chat-box-prompt-form-text-field" required/>      
+        <input type="text" id="netflix-chat-box-prompt-form-text-field" autocomplete="off" required/>      
       </form>
     `
     document.body.append(chatElement)
@@ -75,11 +75,17 @@ const Extension = function() {
   }
 
   const listenToChatPrompt = () => {
+    const promptField = document.querySelector('#netflix-chat-box-prompt-form-text-field')
     const form = document.querySelector('#netflix-chat-box-prompt-form')
     form.addEventListener('submit', e => {
       e.preventDefault()
-      const messageToSend = document.querySelector('#netflix-chat-box-prompt-form-text-field').value.trim()
-      console.log('Send message: "' + messageToSend + '"')
+      const messageToSend = promptField.value.trim()
+      const messageTrimmed = messageToSend.trim()
+      if (messageTrimmed === '') {
+        return
+      }
+      sendChatMessage(messageTrimmed)
+      promptField.value = ''
     })
   }
 
