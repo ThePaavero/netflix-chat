@@ -24,8 +24,6 @@ ws.on('connection', (client, req) => {
 })
 
 const removeClientObjectFromPool = (clientObject) => {
-  console.log('Removing:')
-  console.log(clientObject.username)
   const targetClient = clientsPool.filter(o => o.username === clientObject.username)[0]
   const index = clientsPool.indexOf(targetClient)
   clientsPool.splice(index, 1)

@@ -12,13 +12,18 @@ const Extension = function() {
     const chatElement = document.createElement('div')
     chatElement.id = 'netflix-chat-box'
     chatElement.innerHTML = `
-      <p>Initiating chat, just a second...</p>
+      <div class="netflix-chat-messages-container">
+        <p>Initiating chat, just a second...</p>
+      </div>
+      <form id="netflix-chat-box-prompt-form">
+        <input type="text" id="netflix-chat-box-prompt-form-text-field" required/>      
+      </form>
     `
     document.body.append(chatElement)
   }
 
   const updateChatBox = () => {
-    document.querySelector('#netflix-chat-box').innerHTML = outputRows.join('<br/>')
+    document.querySelector('.netflix-chat-messages-container').innerHTML = outputRows.join('<br/>')
   }
 
   const getMediaId = () => {
@@ -69,6 +74,15 @@ const Extension = function() {
     }
   }
 
+  const listenToChatPrompt = () => {
+    const form = document.querySelector('#netflix-chat-box-prompt-form')
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      const messageToSend = document.querySelector('#netflix-chat-box-prompt-form-text-field').value.trim()
+      console.log('Send message: "' + messageToSend + '"')
+    })
+  }
+
   const tick = () => {
     mediaId = getMediaId()
     mediaTitleString = getMediaTitleString()
@@ -78,6 +92,7 @@ const Extension = function() {
     }
     connectToChat(mediaId, mediaTitleString)
     createChatBox()
+    listenToChatPrompt()
   }
 
   const init = () => {
